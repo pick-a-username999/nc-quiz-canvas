@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nCore - II. Őszi kvíz</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            margin: 0;
+            text-align: center;
+            background-color: lightgray;
+        }
+        
+        body {
+            position: relative;
+        }
+
+        canvas {
+            max-width: 100vw;
+            max-height: 100vh;
+            touch-action: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="2339" height="1656"></canvas>
+    <script>
+        let isHold = false;
+        let lastPos = { x: -100, y:-100 };
+        const quizImgURL = 'https://i.kek.sh/oZIamKxXcGX.png';
+        const canvas = document.querySelector('#canvas');
+        const ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const quizImg = new Image();
+        quizImg.src = quizImgURL;
+        quizImg.onload = () => ctx.drawImage(quizImg, 0, 0);
+
+        function getCanvasPosition(event) {
+            var mouseX = event.offsetX * canvas.width / canvas.clientWidth | 0;
+            var mouseY = event.offsetY * canvas.height / canvas.clientHeight | 0;
+            return { x: mouseX, y: mouseY };
+        }
+
+        canvas.onmousemove = (evt) => {
+            if (!isHold) {
+                lastPos = getCanvasPosition(evt);
+                return;
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(lastPos.x, lastPos.y);
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = 'rgba(255, 0, 0, 0.3)';
+            ctx.lineWidth = 50;
+            ctx.lineTo(lastPos.x, lastPos.y);
+            ctx.stroke();
+            ctx.closePath();
+
+            lastPos = getCanvasPosition(evt);
+        };
+
+        canvas.onmousedown = () => isHold = true;
+        canvas.onmouseup = () => isHold = false;
+        
+        canvas.onpointermove = canvas.onmousemove;
+        canvas.onpointerdown = canvas.onmousedown;
+        canvas.onpointerup = canvas.onmouseup;
+    </script>
+</body>
+</html>
